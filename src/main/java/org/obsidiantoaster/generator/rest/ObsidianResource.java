@@ -17,6 +17,7 @@ package org.obsidiantoaster.generator.rest;
 
 import static javax.json.Json.createObjectBuilder;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
@@ -209,7 +210,13 @@ public class ObsidianResource
                java.nio.file.Path path = Paths.get(selection.get().toString());
                String artifactId = findArtifactId(content);
                byte[] zipContents = org.obsidiantoaster.generator.util.Paths.zip(artifactId, path);
-               org.obsidiantoaster.generator.util.Paths.deleteDirectory(path);
+               new Thread(() -> {
+                  try {
+                     org.obsidiantoaster.generator.util.Paths.deleteDirectory(path);
+                  } catch (IOException e) {
+                     log.log(Level.SEVERE, "could not delete temporary directory", e);
+                  }
+               }).start();
                return Response
                         .ok(zipContents)
                         .type("application/zip")
