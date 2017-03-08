@@ -285,7 +285,6 @@ public class ObsidianResource
                java.nio.file.Path projectPath = Paths.get(selection.get().toString());
                String artifactId = findArtifactId(content);
                byte[] zipContents = org.obsidiantoaster.generator.util.Paths.zip(artifactId, projectPath);
-               directoriesToDelete.offer(projectPath);
                return Response
                         .ok(zipContents)
                         .type("application/zip")
